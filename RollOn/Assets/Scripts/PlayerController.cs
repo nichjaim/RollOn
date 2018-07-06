@@ -5,12 +5,16 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     private Rigidbody2D rb2d;
+    private SpriteRenderer sprtRndr;
+
+    public Sprite spriteMovingRight;
+    public Sprite spriteMovingLeft;
 
     public float playerMoveSpeed;
     public float playerJumpHeigth;
 
-    private float BASE_MOVE_SPEED = 12;
-    private float BASE_JUMP_HEIGTH = 7;
+    private float BASE_MOVE_SPEED = 3;
+    private float BASE_JUMP_HEIGTH = 8;
 
     public PauseMenu pauseMenuScript;
 
@@ -24,6 +28,8 @@ public class PlayerController : MonoBehaviour {
     void Start ()
     {
         rb2d = GetComponent<Rigidbody2D>();
+        sprtRndr = GetComponent<SpriteRenderer>();
+
         playerMoveSpeed = BASE_MOVE_SPEED;
         playerJumpHeigth = BASE_JUMP_HEIGTH;
 	}
@@ -70,8 +76,7 @@ public class PlayerController : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag ("Wall"))
         {
-            //reverses player direction
-            playerMoveSpeed = playerMoveSpeed * -1;
+            reversePlayerDirection();
         }
 
         if (collision.gameObject.CompareTag("Goal"))
@@ -94,6 +99,22 @@ public class PlayerController : MonoBehaviour {
             //rb2d.AddForce(Vector2.up * playerJumpHeigth);
             //rb2d.AddForce(new Vector2(0, playerJumpHeigth));
             //rb2d.AddForce(new Vector2(0, playerJumpHeigth), ForceMode2D.Impulse);
+        }
+    }
+
+    void reversePlayerDirection()
+    {
+        playerMoveSpeed = playerMoveSpeed * -1;
+
+        //if moving in the right direction
+        if(playerMoveSpeed >= 0)
+        {
+            sprtRndr.sprite = spriteMovingRight;
+        }
+        //else moving in the left direction
+        else
+        {
+            sprtRndr.sprite = spriteMovingLeft;
         }
     }
 }

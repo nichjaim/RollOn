@@ -56,7 +56,7 @@ public class PauseMenu : MonoBehaviour {
         //Debug.Log("Loading Menu . . .");
         Time.timeScale = 1f;
         GameIsPaused = false;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("MainMenuScene");
     }
 
     public void levelComplete()
@@ -77,6 +77,6 @@ public class PauseMenu : MonoBehaviour {
 
         //placeholder code: return to main menu and describe proper function in console
         Debug.Log("Loading Next Level . . .");
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("MainMenuScene");
     }
 }
