@@ -16,6 +16,10 @@ public class PlayerController : MonoBehaviour {
     private float BASE_MOVE_SPEED = 3;
     private float BASE_JUMP_HEIGTH = 8;
 
+    private double timer;
+    private double DIRECTION_REVERSE_COOLDOWN_TIME = 0.5;
+    private bool isOnDirectionReverseCooldown;
+
     public PauseMenu pauseMenuScript;
 
     //these variables help ensure player can only jump while touching ground
@@ -32,6 +36,9 @@ public class PlayerController : MonoBehaviour {
 
         playerMoveSpeed = BASE_MOVE_SPEED;
         playerJumpHeigth = BASE_JUMP_HEIGTH;
+
+        timer = 0;
+        isOnDirectionReverseCooldown = false;
 	}
 	
 	// Update is called once per frame
@@ -45,6 +52,17 @@ public class PlayerController : MonoBehaviour {
         onGround = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
 
         playerJump();
+
+        if(isOnDirectionReverseCooldown)
+        {
+            timer += Time.deltaTime;
+
+            if(timer >= DIRECTION_REVERSE_COOLDOWN_TIME)
+            {
+                timer = 0;
+                isOnDirectionReverseCooldown = false;
+            }
+        }
 
 	}
 
@@ -74,9 +92,10 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag ("Wall"))
+        if (collision.gameObject.CompareTag ("Wall") && !isOnDirectionReverseCooldown)
         {
             reversePlayerDirection();
+            isOnDirectionReverseCooldown = true;
         }
 
         if (collision.gameObject.CompareTag("Goal"))
@@ -105,6 +124,8 @@ public class PlayerController : MonoBehaviour {
     void reversePlayerDirection()
     {
         playerMoveSpeed = playerMoveSpeed * -1;
+
+        //Debug.Log("playerMoveSpeed = " + playerMoveSpeed);
 
         //if moving in the right direction
         if(playerMoveSpeed >= 0)
